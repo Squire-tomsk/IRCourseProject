@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %date %-5level [%thread] %logger{128} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="CRAWLER_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>crawler.log</file>
+        <encoder>
+            <pattern>
+                %date %-5level [%thread] %logger{128} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="DOWNLOADMANAGER_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>downloadmanager.log</file>
+        <encoder>
+            <pattern>
+                %date %-5level [%thread] %logger{128} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="DOWNLOADER_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>downloader.log</file>
+        <encoder>
+            <pattern>
+                %date %-5level [%thread] %logger{128} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="GLOBAL_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>global.log</file>
+        <encoder>
+            <pattern>
+                %date %-5level [%thread] %logger{128} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="GLOBAL_FILE" />
+    </root>
+
+    <logger name="crawlers.BashOrgCrawler" level="INFO">
+        <appender-ref ref="CRAWLER_FILE" />
+    </logger>
+
+    <logger name="crawlerprocesslogger" level="INFO">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="downloadmanager" level="INFO">
+        <appender-ref ref="DOWNLOADMANAGER_FILE" />
+    </logger>
+
+    <logger name="downloader" level="INFO">
+        <appender-ref ref="DOWNLOADER_FILE" />
+    </logger>
+</configuration>
