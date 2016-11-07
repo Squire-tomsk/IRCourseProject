@@ -8,7 +8,6 @@ import scalikejdbc._
   */
 class PostgresDocumentDAO extends DocumentDAO{
   implicit val session = AutoSession
-
   override def setDocument(docId: Long, text: String, url: String): Unit = {
     sql"INSERT INTO documents VALUES (${docId},${url},${text})".executeUpdate.apply()
   }
@@ -18,7 +17,7 @@ class PostgresDocumentDAO extends DocumentDAO{
   }
 
   override def getUrl(docId: Long): String = {
-    sql"SELECT url FROM documents WHERE id = ${docId}".map(rs => rs.string("text")).first().apply().getOrElse("")
+    sql"SELECT url FROM documents WHERE id = ${docId}".map(rs => rs.string("url")).first().apply().getOrElse("")
   }
 
   override def getStoredDocumentCount: Long = {
@@ -27,5 +26,9 @@ class PostgresDocumentDAO extends DocumentDAO{
 
   override def erace(): Unit = {
     sql"DELETE FROM documents".executeUpdate.apply()
+  }
+
+  override def deleteDocument(docId: Long): Unit = {
+    sql"DELETE FROM documents WHERE id = ${docId}".executeUpdate.apply()
   }
 }

@@ -11,6 +11,8 @@ trait DocumentDAO {
 
   def getUrl(docId: Long): String
 
+  def deleteDocument(docId: Long)
+
   def getStoredDocumentCount: Long
 
   def erace()

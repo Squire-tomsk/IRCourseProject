@@ -57,4 +57,17 @@ class RedisDocumentDAO extends DocumentDAO {
       }
     }
   }
+
+  override def deleteDocument(docId: Long): Unit = {
+    BasicDAO.redisConnectionPool.withClient {
+      client => {
+        client.keys(docKeyTextPrefix + docId).getOrElse(List())
+          .map({ key => key.getOrElse("") })
+          .foreach(key => client.del(key))
+        client.keys(docKeyUrlPrefix + docId).getOrElse(List())
+          .map({ key => key.getOrElse("") })
+          .foreach(key => client.del(key))
+      }
+    }
+  }
 }
