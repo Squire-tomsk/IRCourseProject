@@ -10,8 +10,8 @@ class Dictionary {
   val documentDAO: DocumentDAO = new PostgresDocumentDAO
   val dictionaryDAO: DictionaryDAO = new DictionaryDAO
 
-  def add(word: String): Unit = {
-    dictionaryDAO.add(word)
+  def add(word: String, docId: Long): Unit = {
+    dictionaryDAO.add(word,docId)
   }
 
   def getIdf(word: String): Double = {
@@ -21,5 +21,9 @@ class Dictionary {
 
   def getDocIDSet(word: String): Set[Long] = {
     dictionaryDAO.getDocIDSet(word)
+  }
+
+  def erace(): Unit ={
+    dictionaryDAO.erase()
   }
 }

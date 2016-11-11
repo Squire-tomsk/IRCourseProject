@@ -9,7 +9,7 @@ class DictionaryDAO {
   val dictionaryKeyPrefix = "dictionary:word:"
   val dictionaryWordsKey = "dictionary:words"
 
-  def add(word: String): Unit ={
+  def add(word: String,docID:Long): Unit ={
     BasicDAO.redisConnectionPool.withClient {
       client => {
         if(client.sismember(dictionaryWordsKey,word)){
@@ -19,6 +19,7 @@ class DictionaryDAO {
           client.sadd(dictionaryWordsKey,word)
           client.set(dictionaryKeyPrefix+word+":freq",1)
         }
+        client.sadd(dictionaryKeyPrefix+word+":doclist",docID)
       }
     }
   }
@@ -58,7 +59,8 @@ class DictionaryDAO {
   def erase(): Unit ={
     BasicDAO.redisConnectionPool.withClient {
       client => {
-        client.keys(dictionaryKeyPrefix).getOrElse(List())
+        client.keys(dictionaryKeyPrefix + "*")
+          .getOrElse(List())
           .map({ key => key.getOrElse("") })
           .foreach(key => client.del(key))
         client.del(dictionaryWordsKey)
