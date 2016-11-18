@@ -10,7 +10,14 @@ class SpellingCorrectionSpec extends FlatSpec with Matchers{
     val corrector = new SpellingCorrector
     //corrector.damerau_levenshtein("time", "tmie") should be (1)
     corrector.levenshtein("time", "tmie") should be (2)
-    corrector.correctTerm("corrcetion") should be (Set("correction", "corruption", "correption"))
-    corrector.correct("corrcetion phrase") should be ("correction corruption correption phrase")
+    
+    //corrector.correctTerm("corrcetion") should be (Set("correction", "corruption", "correption"))
+    //corrector.correct("corrcetion phrase") should be ("correction corruption correption phrase")
+
+    //for test.txt
+    corrector.correct("tmeplate") should be ("template")
+    corrector.correct("tmie") should be ("")
+    corrector.correctTerm("tmie") should be (Set())
+
   }
 }
