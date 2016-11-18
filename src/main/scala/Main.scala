@@ -1,4 +1,6 @@
 
+import java.io.{FileNotFoundException, IOException}
+
 import DAO.BasicDAO
 import DAO.imp.redis.BashOrgCrawlerDAO
 import DAO.traits.DocumentDAO
@@ -8,12 +10,39 @@ import engine.SimpleSearchEngine
 import structures.{Dictionary, PostingList}
 import utils.TermExtractor
 
+import scala.io.Source
+
 object Main {
   def main(args: Array[String]) {
     BasicDAO.init()
-    for(i <- 1 to 50) {
-      example
+    fillDictionary
+  }
+
+  def fillDictionary(): Unit ={
+    val extractor = new TermExtractor
+    val documentDAO = DocumentDAO.getDAO
+    val dictionary = new Dictionary
+    dictionary.erace()
+
+
+    try {
+      for (stopWord <- Source.fromFile(getClass.getResource("/stopwords.txt").getPath).getLines()) {
+        dictionary.addStopWord(stopWord)
+      }
+    } catch {
+      case ex: FileNotFoundException => println("Couldn't find that file.")
+      case ex: IOException => println("Had an IOException trying to read that file")
     }
+
+    val stopWords = dictionary.getStopWords()
+
+    val range = 1 to documentDAO.getStoredDocumentCount.toInt
+    range.map(id => (id,documentDAO.getDocument(id))).
+      map(doc => (doc._1,extractor.extract(doc._2))).
+      foreach(doc => doc._2.
+        filter(term => !stopWords.contains(term)).
+        foreach(term => {dictionary.add(term,doc._1)}))
+
   }
 
   def example: Unit = {
@@ -59,18 +88,5 @@ object Main {
     val ngramsCollection = new NGramsCollection
     ngramsCollection.erase()
     ngramsCollection.create(getClass.getResource("/eng_words.txt").getPath)
-  }
-
-
-  def fillDictionary(): Unit ={
-    val extractor = new TermExtractor
-    val documentDAO = DocumentDAO.getDAO
-    val dictionary = new Dictionary
-    dictionary.erace()
-
-    val range = 1 to documentDAO.getStoredDocumentCount.toInt
-    range.map(id => (id,documentDAO.getDocument(id))).
-      map(doc => (doc._1,extractor.extract(doc._2))).
-      foreach(doc => doc._2.foreach(term => {dictionary.add(term,doc._1)}))
   }
 }

@@ -26,4 +26,12 @@ class Dictionary {
   def erace(): Unit ={
     dictionaryDAO.erase()
   }
+
+  def addStopWord(stopWord: String): Unit = {
+    dictionaryDAO.addStopWord(stopWord)
+  }
+
+  def getStopWords() : Set[String] = {
+    dictionaryDAO.getStopWords()
+  }
 }

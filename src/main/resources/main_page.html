@@ -8,13 +8,15 @@
           rightmargin="50" bottommargin="50">
     <h1 align="center">Type your query</h1>
 
-    <form name="queryform">
-        <input type="text" name="text1" size="100"
-               maxlength="100" value="Type your query">
+    <form name="queryform" action="http://localhost:4567" method="post">
+        <input type="text" name="query" size="100"
+               maxlength="100" value="">
 
         <input type="submit" name="submit" value="Submit">
     </form>
-
+    <br>
+    <hr>
+    <result>
 
 </body>
 </html>

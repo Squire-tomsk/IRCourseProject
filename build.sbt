@@ -24,5 +24,6 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.0" % "test",
   "edu.stanford.nlp" % "stanford-corenlp" % "3.6.0",
   "edu.stanford.nlp" % "stanford-corenlp" % "3.6.0" classifier "models",
-  "com.google.protobuf" % "protobuf-java" % "3.1.0"
+  "com.google.protobuf" % "protobuf-java" % "3.1.0",
+  "com.sparkjava" % "spark-core" % "2.5.2"
 )

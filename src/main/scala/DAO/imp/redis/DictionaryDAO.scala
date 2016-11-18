@@ -8,6 +8,7 @@ import DAO.BasicDAO
 class DictionaryDAO {
   val dictionaryKeyPrefix = "dictionary:word:"
   val dictionaryWordsKey = "dictionary:words"
+  val dictionaryStopWordsKey = "dictionary:stopwords"
 
   def add(word: String,docID:Long): Unit ={
     BasicDAO.redisConnectionPool.withClient {
@@ -56,6 +57,22 @@ class DictionaryDAO {
     }
   }
 
+  def addStopWord(stopWord: String): Unit = {
+    BasicDAO.redisConnectionPool.withClient {
+      client => {
+        client.sadd(dictionaryStopWordsKey,stopWord)
+      }
+    }
+  }
+
+  def getStopWords() : Set[String] = {
+    BasicDAO.redisConnectionPool.withClient {
+      client => {
+        client.smembers[String](dictionaryStopWordsKey).get.map(word => word.get)
+      }
+    }
+  }
+
   def erase(): Unit ={
     BasicDAO.redisConnectionPool.withClient {
       client => {
@@ -64,6 +81,7 @@ class DictionaryDAO {
           .map({ key => key.getOrElse("") })
           .foreach(key => client.del(key))
         client.del(dictionaryWordsKey)
+        client.del(dictionaryStopWordsKey)
       }
     }
   }

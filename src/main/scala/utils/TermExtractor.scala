@@ -6,7 +6,8 @@ import org.jsoup.Jsoup
 
 class TermExtractor{
   def extract(doc: String): List[String] = {
-    val document = new Document(Jsoup.parse(doc).body().text())
+    val text = Jsoup.parse(doc).body().text()
+    val document = new Document(text)
     document.
       sentences().
       toList.

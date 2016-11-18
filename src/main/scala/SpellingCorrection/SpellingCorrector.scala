@@ -51,7 +51,7 @@ class SpellingCorrector {
       rating += (variant -> temp)
     }
     if (rating.size > 10) {
-      rating.toSeq.sortBy(_._2).dropRight(10).reverse.toMap
+      rating.toSeq.sortBy(_._2).takeRight(10).reverse.toMap
     }
     for (variant <- rating) {
       rating(variant._1) = levenshtein(term, variant._1)
