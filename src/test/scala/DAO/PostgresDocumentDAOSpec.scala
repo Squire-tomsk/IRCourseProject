@@ -1,6 +1,7 @@
 package DAO
 
 import DAO.imp.postgres.PostgresDocumentDAO
+import DAO.traits.DocumentDAO
 import org.scalatest.{FlatSpec, Matchers}
 
 /**
@@ -9,7 +10,7 @@ import org.scalatest.{FlatSpec, Matchers}
 class PostgresDocumentDAOSpec extends FlatSpec with Matchers{
   "The PostgresDocumentDAO" should "store document data associated with docID" in {
     BasicDAO.init()
-    val documentDAO = new PostgresDocumentDAO
+    val documentDAO = DocumentDAO.getDAO
     documentDAO.deleteDocument(-1)
     documentDAO.setDocument(-1,"Test","Http:\\test_url.com")
     documentDAO.getDocument(-1) should be ("Test")

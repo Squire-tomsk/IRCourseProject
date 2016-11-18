@@ -1,22 +1,24 @@
 
 import DAO.BasicDAO
-import DAO.imp.postgres.PostgresDocumentDAO
 import DAO.imp.redis.BashOrgCrawlerDAO
+import DAO.traits.DocumentDAO
+import SpellingCorrection.NGramsCollection
 import crawlers.BashOrgCrawler
 import engine.SimpleSearchEngine
 import structures.{Dictionary, PostingList}
-import utils.{DocToVecConverter, TermExtractor}
+import utils.TermExtractor
 
 object Main {
   def main(args: Array[String]) {
     BasicDAO.init()
-
-    example
+    for(i <- 1 to 50) {
+      example
+    }
   }
 
   def example: Unit = {
     val engine = new SimpleSearchEngine
-    val documentDAO = new PostgresDocumentDAO
+    val documentDAO = DocumentDAO.getDAO
     val extractor = new TermExtractor
     val random = scala.util.Random
 
@@ -34,7 +36,7 @@ object Main {
   }
 
   def crawlDocsFromBashOrg : Unit = {
-    val documentDAO = new PostgresDocumentDAO
+    val documentDAO = DocumentDAO.getDAO
     val crawlerDAO = new BashOrgCrawlerDAO
     documentDAO.erace()
     crawlerDAO.erace()
@@ -46,17 +48,23 @@ object Main {
   def extractPostingLists : Unit = {
     val postingLists = new PostingList
     val extractor = new TermExtractor
-    val documentDAO = new PostgresDocumentDAO
+    val documentDAO = DocumentDAO.getDAO
 
     val range = 1 to documentDAO.getStoredDocumentCount.toInt
     range.map(id => (id,documentDAO.getDocument(id))).
       foreach(doc => postingLists.add(doc._2,doc._1))
   }
 
+  def fillNGrammIndex: Unit ={
+    val ngramsCollection = new NGramsCollection
+    ngramsCollection.erase()
+    ngramsCollection.create(getClass.getResource("/eng_words.txt").getPath)
+  }
+
 
   def fillDictionary(): Unit ={
     val extractor = new TermExtractor
-    val documentDAO = new PostgresDocumentDAO
+    val documentDAO = DocumentDAO.getDAO
     val dictionary = new Dictionary
     dictionary.erace()
 

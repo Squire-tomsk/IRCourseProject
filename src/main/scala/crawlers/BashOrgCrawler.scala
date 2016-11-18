@@ -4,6 +4,7 @@ import java.util.concurrent.atomic.AtomicLong
 
 import DAO.imp.postgres.PostgresDocumentDAO
 import DAO.imp.redis.BashOrgCrawlerDAO
+import DAO.traits.DocumentDAO
 import com.gaocegege.scrala.core.common.response.impl.HttpResponse
 import com.gaocegege.scrala.core.spider.impl.DefaultSpider
 import com.typesafe.scalalogging.Logger
@@ -17,7 +18,7 @@ class BashOrgCrawler extends DefaultSpider {
   val processLogger = Logger(LoggerFactory.getLogger("crawlerprocesslogger"))
 
   val crawlerDAO = new BashOrgCrawlerDAO
-  val documentDAO = new PostgresDocumentDAO
+  val documentDAO = DocumentDAO.getDAO
 
   override var workerCount: Int = 2
   val quoteNumbers = crawlerDAO.getNotCraledDocumentNumbersList

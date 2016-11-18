@@ -20,8 +20,8 @@ class NGramsList {
     ngramsListDAO.intersect(ngram1, ngrams: _*)
   }
 
-  //внимание, костыль
   def intersectSet (ngrams: Set[String]): Set[String] ={
+    if(ngrams.isEmpty) return Set()
     var result = intersect(ngrams.head)
     val tempngrams = ngrams.-(ngrams.head)
     for(ngram <- tempngrams){

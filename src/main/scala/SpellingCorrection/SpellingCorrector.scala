@@ -9,22 +9,17 @@ import utils.TermExtractor
 class SpellingCorrector {
   val ngramsCollection = new NGramsCollection
   val termExtractor = new TermExtractor
-  ngramsCollection.erase()
-
-  //uncomment to create NGramCollection
-  ngramsCollection.create("src\\main\\scala\\SpellingCorrection\\resources\\test.txt")
 
   def correct(query: String): String = {
     val terms = termExtractor.extract(query)
     var result = ""
     for (term <- terms) {
-      result += correctTerm(term) + " "
-      //variants.foreach(v => println(term + "\t" + v._1 + "\t" + v._2 + "\n"))
+      val variance = correctTerm(term).foreach(v => result += (v+" "))
     }
-    result
+    result.dropRight(1)
   }
 
-  def correctTerm(term: String): String = {
+  def correctTerm(term: String): Set[String] = {
     val ngrams = new NGrams
     val termngrams = ngrams.make(term)
     val bigramNumber = termngrams.size
@@ -62,7 +57,7 @@ class SpellingCorrector {
       rating(variant._1) = levenshtein(term, variant._1)
     }
 
-    rating.find(f => f._2 == rating.valuesIterator.min).get._1
+    rating.filter(f => f._2 == rating.valuesIterator.min).keySet.toSet
   }
 
   def jaccard (ngrams1: Set[String], ngrams2: Set[String]): Double = {

@@ -7,7 +7,7 @@ import DAO.traits.DocumentDAO
   * Created by abuca on 10.11.16.
   */
 class Dictionary {
-  val documentDAO: DocumentDAO = new PostgresDocumentDAO
+  val documentDAO: DocumentDAO = DocumentDAO.getDAO
   val dictionaryDAO: DictionaryDAO = new DictionaryDAO
 
   def add(word: String, docId: Long): Unit = {

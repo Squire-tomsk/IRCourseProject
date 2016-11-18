@@ -1,6 +1,8 @@
 package engine
 
 import DAO.imp.postgres.PostgresDocumentDAO
+import DAO.traits.DocumentDAO
+import SpellingCorrection.SpellingCorrector
 import structures.{Dictionary, PostingList}
 import utils.{DocToVecConverter, TermExtractor}
 
@@ -8,11 +10,12 @@ import utils.{DocToVecConverter, TermExtractor}
   * Created by abuca on 12.11.16.
   */
 class SimpleSearchEngine {
-  val documentDAO = new PostgresDocumentDAO
+  val documentDAO = DocumentDAO.getDAO
   val postingLists = new PostingList
   val converter = new DocToVecConverter
   val extractor = new TermExtractor
   val dictionary = new Dictionary
+  val corrector = new SpellingCorrector
 
   def search(query: String): List[(Long,Double)] = {
     val terms = extractor.extract(query)
@@ -22,8 +25,10 @@ class SimpleSearchEngine {
       reduce((set1,set2) => set1.union(set2)).
       toList
 
+    val queryAddition = corrector.correct(query)
+
     val queryVector = converter.
-      convert(query).
+      convert(query+" "+queryAddition).
       map(tfEntety => (tfEntety._1,dictionary.getIdf(tfEntety._1)*tfEntety._2))
 
     val scores = docPool.
