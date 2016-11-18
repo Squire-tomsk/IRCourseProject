@@ -11,8 +11,8 @@ class SpellingCorrectionSpec extends FlatSpec with Matchers{
     //corrector.correctTerm("adres")
     //corrector.damerau_levenshtein("time", "tmie") should be (1)
     corrector.levenshtein("time", "tmie") should be (2)
-    //corrector.correctTerm("tiem") should be ("time")
-    corrector.correctTerm("corrcetion") should be ("correction")
-    corrector.correct("corrcetion phrase") should be ("correction phrase ")
+    corrector.correctTerm("tiem") should be ("time")
+    //corrector.correctTerm("corrcetion") should be ("correction")
+    //corrector.correct("corrcetion phrase") should be ("correction phrase ")
   }
 }

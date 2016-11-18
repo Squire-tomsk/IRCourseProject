@@ -50,7 +50,6 @@ object Main {
 
     val range = 1 to documentDAO.getStoredDocumentCount.toInt
     range.map(id => (id,documentDAO.getDocument(id))).
-      map(doc => (doc._1,extractor.extract(doc._2))).
       foreach(doc => postingLists.add(doc._2,doc._1))
   }
 

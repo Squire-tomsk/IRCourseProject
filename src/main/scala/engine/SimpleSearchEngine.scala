@@ -18,7 +18,7 @@ class SimpleSearchEngine {
     val terms = extractor.extract(query)
 
     val docPool = terms.
-      map(term => dictionary.getDocIDSet(term)).
+      map(term => dictionary.getDocIDSet(term)). //here
       reduce((set1,set2) => set1.union(set2)).
       toList
 
@@ -27,7 +27,7 @@ class SimpleSearchEngine {
       map(tfEntety => (tfEntety._1,dictionary.getIdf(tfEntety._1)*tfEntety._2))
 
     val scores = docPool.
-      map(docId => (docId,postingLists.getLogTf(docId))).
+      map(docId => (docId,postingLists.getLogTf(docId))). //here
       map(tfMap => (tfMap._1,tfMap._2.filterKeys(term => queryVector.keySet.contains(term)))).
       map(tfMap => (tfMap._1,tfMap._2.map(tfEntety => (tfEntety._1,dictionary.getIdf(tfEntety._1)*tfEntety._2)))).
       map(tfidfMap => (tfidfMap._1,tfidfMap._2.map(tfidfEntety => queryVector.get(tfidfEntety._1).get*tfidfEntety._2).sum))

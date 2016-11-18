@@ -9,10 +9,10 @@ import utils.TermExtractor
 class SpellingCorrector {
   val ngramsCollection = new NGramsCollection
   val termExtractor = new TermExtractor
-  //ngramsCollection.erase()
+  ngramsCollection.erase()
 
   //uncomment to create NGramCollection
-  //ngramsCollection.create("src\\main\\scala\\SpellingCorrection\\resources\\eng_words.txt")
+  ngramsCollection.create("src\\main\\scala\\SpellingCorrection\\resources\\test.txt")
 
   def correct(query: String): String = {
     val terms = termExtractor.extract(query)

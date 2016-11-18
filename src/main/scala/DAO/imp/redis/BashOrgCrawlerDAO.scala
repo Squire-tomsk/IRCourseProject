@@ -33,11 +33,9 @@ class BashOrgCrawlerDAO {
         if (!client.exists(crawledListKey)) {
           client.rpush(crawledListKey, -1)
         }
-        val range =
-          client.lrange(crawledListKey, 0, -1).getOrElse(List())
+        client.lrange(crawledListKey, 0, -1).getOrElse(List())
             .map({ number => number.getOrElse("-1") })
             .map({ number => number.toInt })
-        range
       }
     }
   }
