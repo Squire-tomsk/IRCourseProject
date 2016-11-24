@@ -2,10 +2,10 @@
 import java.io.{FileNotFoundException, IOException}
 
 import DAO.BasicDAO
-import DAO.imp.redis.BashOrgCrawlerDAO
+import DAO.imp.redis.{BashOrgCrawlerDAO, WikipediaCrawlerDAO}
 import DAO.traits.DocumentDAO
 import SpellingCorrection.NGramsCollection
-import crawlers.BashOrgCrawler
+import crawlers.{BashOrgCrawler, WikipediaCrawler}
 import engine.SimpleSearchEngine
 import structures.{Dictionary, PostingList}
 import utils.TermExtractor
@@ -15,7 +15,16 @@ import scala.io.Source
 object Main {
   def main(args: Array[String]) {
     BasicDAO.init()
-    fillDictionary
+  }
+
+  def crawlDocsFromWikipedia : Unit = {
+    val documentDAO = DocumentDAO.getDAO
+    val crawlerDAO = new WikipediaCrawlerDAO
+    documentDAO.erace()
+    crawlerDAO.erace()
+
+    val crawler = new WikipediaCrawler
+    crawler begin
   }
 
   def fillDictionary(): Unit ={

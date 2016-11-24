@@ -16,6 +16,16 @@ class PostgresDocumentDAO extends DocumentDAO{
     sql"SELECT text FROM documents WHERE id = ${docId}".map(rs => rs.string("text")).first().apply().getOrElse("")
   }
 
+  override def getDocumentOrLink(docId: Long): String = {
+    val document = sql"SELECT text FROM documents WHERE id = ${docId}".map(rs => rs.string("text")).first().apply().getOrElse("")
+    if(document.length > 1000){
+      "<a href=\""+getUrl(docId)+"\">"+getUrl(docId).substring(30)+"</a>"
+    }
+    else {
+      document
+    }
+  }
+
   override def getUrl(docId: Long): String = {
     sql"SELECT url FROM documents WHERE id = ${docId}".map(rs => rs.string("url")).first().apply().getOrElse("")
   }

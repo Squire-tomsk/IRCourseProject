@@ -14,6 +14,8 @@ trait DocumentDAO {
 
   def getDocument(docId: Long): String
 
+  def getDocumentOrLink(docId: Long): String
+
   def getUrl(docId: Long): String
 
   def deleteDocument(docId: Long)

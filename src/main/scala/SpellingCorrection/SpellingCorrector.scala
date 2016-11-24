@@ -2,6 +2,8 @@ package SpellingCorrection
 
 import utils.TermExtractor
 
+import scala.collection.mutable
+
 
 /**
   * Created by Anastasiia on 15.11.2016.
@@ -43,7 +45,7 @@ class SpellingCorrector {
       variants ++= ngramsCollection.ngramslist.intersectSet(termngramsCombo.toSet)
     }
     var max = 0.0
-    var rating = collection.mutable.Map[String, Double]()
+    var rating = Map[String, Double]()
 
     for (variant <- variants) {
       val temp = jaccard(termngrams, ngrams.make(variant))
@@ -51,13 +53,10 @@ class SpellingCorrector {
       rating += (variant -> temp)
     }
     if (rating.size > 10) {
-      rating.toSeq.sortBy(_._2).takeRight(10).reverse.toMap
+      rating = rating.toSeq.sortBy(_._2).takeRight(10).reverse.toMap
     }
-    for (variant <- rating) {
-      rating(variant._1) = levenshtein(term, variant._1)
-    }
-
-    rating.filter(f => f._2 == rating.valuesIterator.min).keySet.toSet
+    rating = rating.map(node => (node._1,levenshtein(term, node._1).toDouble))
+    rating.filter(f => f._2 == rating.valuesIterator.min).keySet
   }
 
   def jaccard (ngrams1: Set[String], ngrams2: Set[String]): Double = {

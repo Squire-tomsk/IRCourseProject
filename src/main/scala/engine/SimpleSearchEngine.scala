@@ -50,4 +50,11 @@ class SimpleSearchEngine {
       map(tuple => tuple._1).
       map(id => documentDAO.getDocument(id))
   }
+
+  def getDocumentsOrLinks(query: String): java.util.List[String] = {
+    search(query).
+      take(10).
+      map(tuple => tuple._1).
+      map(id => documentDAO.getDocumentOrLink(id))
+  }
 }

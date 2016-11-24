@@ -7,10 +7,6 @@ import engine.SimpleSearchEngine;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
 
@@ -28,7 +24,7 @@ public class WebMain {
                 return webForm;
             }
             else {
-                List<String> result = searchEngine.getDocuments(query);
+                List<String> result = searchEngine.getDocumentsOrLinks(query);
                 String resultString = result.stream().reduce((str1,str2) -> str1+"<br><hr><br>"+str2).toString();
                 return webForm.replaceFirst("<result>",resultString);
             }

@@ -27,6 +27,20 @@ class RedisDocumentDAO extends DocumentDAO {
     }
   }
 
+  override def getDocumentOrLink(docId: Long): String = {
+    BasicDAO.redisConnectionPool.withClient {
+      client => {
+        val document = client.get(docKeyTextPrefix + docId).getOrElse("")
+        if(document.length > 1000){
+          "<a href=\""+getUrl(docId)+"\">"+getUrl(docId).substring(30)+"</a>"
+        }
+        else {
+          document
+        }
+      }
+    }
+  }
+
 
   override def getUrl(docId: Long): String = {
     BasicDAO.redisConnectionPool.withClient {
