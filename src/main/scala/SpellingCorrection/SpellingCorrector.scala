@@ -14,11 +14,9 @@ class SpellingCorrector {
 
   def correct(query: String): String = {
     val terms = termExtractor.extract(query)
-    var result = ""
-    for (term <- terms) {
-      val variance = correctTerm(term).foreach(v => result += (v+" "))
-    }
-    result.dropRight(1)
+    terms.par.map(term => correctTerm(term)).
+      reduce((termSet1, termSet2) => termSet1.union(termSet2)).
+      seq.reduce((term1,term2) => term1+" "+term2)
   }
 
   def correctTerm(term: String): Set[String] = {

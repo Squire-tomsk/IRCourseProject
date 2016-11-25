@@ -17,10 +17,10 @@ import scala.collection.mutable
   * Created by abuca on 04.11.16.
   */
 class WikipediaCrawler extends DefaultSpider {
-  val requiredDocCount = 100000
+  val requiredDocCount = 1000000
 
   val crawlerLogger = Logger(LoggerFactory.getLogger(this.getClass))
-  val processLogger = Logger(LoggerFactory.getLogger("crawlerprocesslogger"))
+  val processLogger = Logger(LoggerFactory.getLogger("console_logger"))
 
   val crawlerDAO = new WikipediaCrawlerDAO
   val documentDAO = DocumentDAO.getDAO
@@ -65,7 +65,10 @@ class WikipediaCrawler extends DefaultSpider {
           toArray[Element](Array[Element]()).
           map(node => node.text()).
           reduce((text1,text2) => text1+text2)
-        documentDAO.setDocument(docID,text,pagePrefix+"/wiki/"+title.replace(' ','_').replaceFirst("_-_Wikipedia",""))
+        val url = pagePrefix+"/wiki/"+title.replace(' ','_').replaceFirst("_-_Wikipedia","")
+        documentDAO.setDocument(docID,text,url)
+        crawlerLogger.info("Crawled article:"+title+" from url: " + url + " docId: " + docID)
+        processLogger.info("Crawled article:"+title + " crawled: " + docID + " from " + requiredDocCount)
       }
     }
     if(!linksPool.isEmpty){

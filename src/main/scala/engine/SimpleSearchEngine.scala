@@ -35,13 +35,21 @@ class SimpleSearchEngine {
       filter(tfEntety => !stopWords.contains(tfEntety._1)).
       map(tfEntety => (tfEntety._1,dictionary.getIdf(tfEntety._1)*tfEntety._2))
 
+    /*val queryVector = converter.
+      convert(query).
+      filter(tfEntety => !stopWords.contains(tfEntety._1)).
+      map(tfEntety => (tfEntety._1,dictionary.getIdf(tfEntety._1)*tfEntety._2))*/
+
     val scores = docPool.
+      par.
       map(docId => (docId,postingLists.getLogTf(docId))).
       map(tfMap => (tfMap._1,tfMap._2.filterKeys(term => queryVector.keySet.contains(term)))).
       map(tfMap => (tfMap._1,tfMap._2.map(tfEntety => (tfEntety._1,dictionary.getIdf(tfEntety._1)*tfEntety._2)))).
-      map(tfidfMap => (tfidfMap._1,tfidfMap._2.map(tfidfEntety => queryVector.get(tfidfEntety._1).get*tfidfEntety._2).sum))
+      map(tfidfMap => (tfidfMap._1,tfidfMap._2.map(tfidfEntety => queryVector.get(tfidfEntety._1).get*tfidfEntety._2).sum)).
+      seq.
+      toList
 
-    scores.sortBy(entety => 1/entety._2)
+    scores.sortBy(entety => 1/entety._2).filterNot(entety => entety._2.isInfinity).take(100)
   }
 
   def getDocuments(query: String): java.util.List[String] = {

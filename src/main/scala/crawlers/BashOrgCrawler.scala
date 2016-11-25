@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory
   */
 class BashOrgCrawler extends DefaultSpider {
   val crawlerLogger = Logger(LoggerFactory.getLogger(this.getClass))
-  val processLogger = Logger(LoggerFactory.getLogger("crawlerprocesslogger"))
+  val processLogger = Logger(LoggerFactory.getLogger("console_logger"))
 
   val crawlerDAO = new BashOrgCrawlerDAO
   val documentDAO = DocumentDAO.getDAO
