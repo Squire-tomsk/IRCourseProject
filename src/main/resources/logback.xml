@@ -27,6 +27,15 @@
         </encoder>
     </appender>
 
+    <appender name="BENCHMARK_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>benchmark.log</file>
+        <encoder>
+            <pattern>
+                %date %-5level [%thread] %logger{128} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
     <appender name="DOWNLOADMANAGER_FILE" class="ch.qos.logback.core.FileAppender">
         <file>downloadmanager.log</file>
         <encoder>
@@ -64,6 +73,15 @@
 
     <logger name="crawlers.WikipediaCrawler" level="INFO">
         <appender-ref ref="CRAWLER_FILE" />
+    </logger>
+
+    <logger name="utils.NPLCollectionLoader" level="INFO">
+        <appender-ref ref="LOADER_FILE" />
+    </logger>
+
+    <logger name="engine.SimpleSearchEngineBenchmark" level="INFO">
+        <appender-ref ref="BENCHMARK_FILE" />
+        <appender-ref ref="STDOUT" />
     </logger>
 
     <logger name="console_logger" level="INFO">

@@ -15,6 +15,10 @@ import static spark.Spark.*;
 public class WebMain {
     public static void main(String[] args) throws IOException {
         BasicDAO.init();
+        int maxThreads = 8;
+        int minThreads = 2;
+        int timeOutMillis = 30000;
+        threadPool(maxThreads, minThreads, timeOutMillis);
         WebMain obj = new WebMain();
         String webForm = obj.getFile("main_page.html");
         post("/", (req, res) -> {

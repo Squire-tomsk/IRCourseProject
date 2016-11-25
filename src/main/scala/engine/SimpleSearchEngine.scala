@@ -35,11 +35,6 @@ class SimpleSearchEngine {
       filter(tfEntety => !stopWords.contains(tfEntety._1)).
       map(tfEntety => (tfEntety._1,dictionary.getIdf(tfEntety._1)*tfEntety._2))
 
-    /*val queryVector = converter.
-      convert(query).
-      filter(tfEntety => !stopWords.contains(tfEntety._1)).
-      map(tfEntety => (tfEntety._1,dictionary.getIdf(tfEntety._1)*tfEntety._2))*/
-
     val scores = docPool.
       par.
       map(docId => (docId,postingLists.getLogTf(docId))).

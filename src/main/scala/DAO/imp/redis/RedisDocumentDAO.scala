@@ -7,7 +7,7 @@ import DAO.traits.DocumentDAO
   * Created by abuca on 04.11.16.
   */
 class RedisDocumentDAO extends DocumentDAO {
-  val docKeyTextPrefix: String = "document:text:docId:"
+  val docKeyTextPrefix: String = "document:docId:"
   val docKeyUrlPrefix: String = "document:url:docId:"
 
   override def setDocument(docId: Long, text: String, url: String) = {
@@ -32,7 +32,7 @@ class RedisDocumentDAO extends DocumentDAO {
       client => {
         val document = client.get(docKeyTextPrefix + docId).getOrElse("")
         if(document.length > 1000){
-          "<a href=\""+getUrl(docId)+"\">"+getUrl(docId).substring(30)+"</a>"
+          "<a href=\""+getUrl(docId)+"\">"+getUrl(docId)+"</a>"
         }
         else {
           document
