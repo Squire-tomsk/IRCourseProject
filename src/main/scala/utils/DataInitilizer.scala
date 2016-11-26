@@ -18,25 +18,24 @@ import scala.io.Source
 class DataInitilizer {
   val processLogger = Logger(LoggerFactory.getLogger("console_logger"))
 
-  def initilizeBashOrgData: Unit ={
+  def initilizeBashOrgData: Unit = {
     processLogger.info("Initialisation started for Bash.org data")
     crawlDocsFromBashOrg
-    initilizeStructures
   }
 
-  def initilizeWikipediaData: Unit ={
-    processLogger.info("Initialisation started for wikipedia data")
-    crawlDocsFromWikipedia
-    initilizeStructures
+  private def crawlDocsFromBashOrg: Unit = {
+    val documentDAO = DocumentDAO.getDAO
+    val crawlerDAO = new BashOrgCrawlerDAO
+    processLogger.info("Data cleaning started")
+    documentDAO.erace()
+    crawlerDAO.erace()
+    processLogger.info("Data cleaning finished")
+
+    val crawler = new BashOrgCrawler
+    crawler begin
   }
 
-  def initilizeNPLData: Unit ={
-    processLogger.info("Initialisation started for NPLcollection data")
-    loadDocsFromNPL
-    initilizeStructures
-  }
-
-  def initilizeStructures: Unit ={
+  def initilizeStructures: Unit = {
     processLogger.info("Dictionary building is started")
     fillDictionary
     processLogger.info("Posting list building is started")
@@ -46,32 +45,7 @@ class DataInitilizer {
     processLogger.info("Data initialisation finished")
   }
 
-  private def loadDocsFromNPL : Unit = {
-    val loader = new NPLCollectionLoader
-    loader.loadDocsToDAO()
-  }
-
-  private def crawlDocsFromWikipedia : Unit = {
-    val documentDAO = DocumentDAO.getDAO
-    val crawlerDAO = new WikipediaCrawlerDAO
-    documentDAO.erace()
-    crawlerDAO.erace()
-
-    val crawler = new WikipediaCrawler
-    crawler begin
-  }
-
-  private def crawlDocsFromBashOrg : Unit = {
-    val documentDAO = DocumentDAO.getDAO
-    val crawlerDAO = new BashOrgCrawlerDAO
-    documentDAO.erace()
-    crawlerDAO.erace()
-
-    val crawler = new BashOrgCrawler
-    crawler begin
-  }
-
-  private def fillDictionary(): Unit ={
+  private def fillDictionary(): Unit = {
     val extractor = new TermExtractor
     val documentDAO = DocumentDAO.getDAO
     val dictionary = new Dictionary
@@ -90,38 +64,67 @@ class DataInitilizer {
     val stopWords = dictionary.getStopWords()
 
     val range = 1 to documentDAO.getStoredDocumentCount.toInt
-    range.par.map(id => (id,documentDAO.getDocument(id))).
+    range.par.map(id => (id, documentDAO.getDocument(id))).
       map(doc => {
         processLogger.info("[DICT] Words extraction for doc " + doc._1)
-        (doc._1,extractor.extract(doc._2))
+        (doc._1, extractor.extract(doc._2))
       }).
       foreach(doc => {
         processLogger.info("[DICT] Save word for doc " + doc._1 + " to database")
         doc._2.
           filter(term => !stopWords.contains(term)).
-          foreach(term => {dictionary.add(term,doc._1)})
+          foreach(term => {
+            dictionary.add(term, doc._1)
+          })
       })
 
   }
 
-  private def extractPostingLists : Unit = {
+  private def extractPostingLists: Unit = {
     val postingLists = new PostingList
     val documentDAO = DocumentDAO.getDAO
 
     val range = 1 to documentDAO.getStoredDocumentCount.toInt
     range.par.map(id => {
       processLogger.info("[POST LIST] Posting list building for doc " + id)
-      (id,documentDAO.getDocument(id))
+      (id, documentDAO.getDocument(id))
     }).
       foreach(doc => {
         processLogger.info("[POST LIST]  Save posting list for doc " + doc._1 + " to database")
-        postingLists.add(doc._2,doc._1)
+        postingLists.add(doc._2, doc._1)
       })
   }
 
-  private def fillNGrammIndex: Unit ={
+  private def fillNGrammIndex: Unit = {
     val ngramsCollection = new NGramsCollection
     ngramsCollection.erase()
     ngramsCollection.create(getClass.getResource("/eng_words.txt").getPath)
+  }
+
+  def initilizeWikipediaData: Unit = {
+    processLogger.info("Initialisation started for wikipedia data")
+    crawlDocsFromWikipedia
+  }
+
+  private def crawlDocsFromWikipedia: Unit = {
+    val documentDAO = DocumentDAO.getDAO
+    val crawlerDAO = new WikipediaCrawlerDAO
+    processLogger.info("Data cleaning started")
+    documentDAO.erace()
+    crawlerDAO.erace()
+    processLogger.info("Data cleaning finished")
+
+    val crawler = new WikipediaCrawler
+    crawler begin
+  }
+
+  def initilizeNPLData: Unit = {
+    processLogger.info("Initialisation started for NPLcollection data")
+    loadDocsFromNPL
+  }
+
+  private def loadDocsFromNPL: Unit = {
+    val loader = new NPLCollectionLoader
+    loader.loadDocsToDAO()
   }
 }

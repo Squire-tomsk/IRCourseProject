@@ -6,8 +6,9 @@ import scalikejdbc._
 /**
   * Created by abuca on 06.11.16.
   */
-class PostgresDocumentDAO extends DocumentDAO{
+class PostgresDocumentDAO extends DocumentDAO {
   implicit val session = AutoSession
+
   override def setDocument(docId: Long, text: String, url: String): Unit = {
     sql"INSERT INTO documents VALUES (${docId},${url},${text})".executeUpdate.apply()
   }
@@ -18,8 +19,8 @@ class PostgresDocumentDAO extends DocumentDAO{
 
   override def getDocumentOrLink(docId: Long): String = {
     val document = sql"SELECT text FROM documents WHERE id = ${docId}".map(rs => rs.string("text")).first().apply().getOrElse("")
-    if(document.length > 1000){
-      "<a href=\""+getUrl(docId)+"\">"+getUrl(docId).substring(30)+"</a>"
+    if (document.length > 1000) {
+      "<a href=\"" + getUrl(docId) + "\">" + getUrl(docId).substring(30) + "</a>"
     }
     else {
       document

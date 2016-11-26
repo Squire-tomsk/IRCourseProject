@@ -2,8 +2,6 @@ package SpellingCorrection
 
 import utils.TermExtractor
 
-import scala.collection.mutable
-
 
 /**
   * Created by Anastasiia on 15.11.2016.
@@ -16,7 +14,7 @@ class SpellingCorrector {
     val terms = termExtractor.extract(query)
     terms.par.map(term => correctTerm(term)).
       reduce((termSet1, termSet2) => termSet1.union(termSet2)).
-      seq.reduce((term1,term2) => term1+" "+term2)
+      seq.reduce((term1, term2) => term1 + " " + term2)
   }
 
   def correctTerm(term: String): Set[String] = {
@@ -53,11 +51,11 @@ class SpellingCorrector {
     if (rating.size > 10) {
       rating = rating.toSeq.sortBy(_._2).takeRight(10).reverse.toMap
     }
-    rating = rating.map(node => (node._1,levenshtein(term, node._1).toDouble))
+    rating = rating.map(node => (node._1, levenshtein(term, node._1).toDouble))
     rating.filter(f => f._2 == rating.valuesIterator.min).keySet
   }
 
-  def jaccard (ngrams1: Set[String], ngrams2: Set[String]): Double = {
+  def jaccard(ngrams1: Set[String], ngrams2: Set[String]): Double = {
     ngrams1.intersect(ngrams2).size.toDouble /
       ngrams1.union(ngrams2).size.toDouble
   }
@@ -72,12 +70,12 @@ class SpellingCorrector {
     for (j <- 0 to lenStr2) d(0)(j) = j
 
     for (i <- 1 to lenStr1; j <- 1 to lenStr2) {
-      val cost = if (str1(i - 1) == str2(j-1)) 0 else 1
+      val cost = if (str1(i - 1) == str2(j - 1)) 0 else 1
 
       d(i)(j) = min(
-        d(i-1)(j  ) + 1,     // deletion
-        d(i  )(j-1) + 1,     // insertion
-        d(i-1)(j-1) + cost   // substitution
+        d(i - 1)(j) + 1, // deletion
+        d(i)(j - 1) + 1, // insertion
+        d(i - 1)(j - 1) + cost // substitution
       )
     }
 
@@ -85,6 +83,7 @@ class SpellingCorrector {
   }
 
   def min(nums: Int*): Int = nums.min
+
   /*def damerau_levenshtein (word1: String, word2: String): Int = {
     val da = Array.fill(26)(0)
     val distances = Array.ofDim[Int](word1.length + 2, word2.length + 2)

@@ -6,7 +6,7 @@ import SpellingCorrection.NGrams
 /**
   * Created by Anastasiia on 14.11.2016.
   */
-class NGramsListDAO{
+class NGramsListDAO {
   val ngrammListPrefix = "ngramlist:ngram:"
 
   def addTerm(term: String): Unit = {
@@ -19,7 +19,7 @@ class NGramsListDAO{
     }
   }
 
-  def get(ngram: String): Set[String] ={
+  def get(ngram: String): Set[String] = {
     BasicDAO.redisConnectionPool.withClient {
       client => {
         client.smembers(ngrammListPrefix + ngram)
@@ -29,7 +29,7 @@ class NGramsListDAO{
     }
   }
 
-  def intersect(ngram1: String, ngrams: String* ): Set[String] ={
+  def intersect(ngram1: String, ngrams: String*): Set[String] = {
     BasicDAO.redisConnectionPool.withClient {
       client => {
         client.sinter(ngrammListPrefix + ngram1, ngrams.map(ngram => ngrammListPrefix + ngram): _*)
@@ -39,28 +39,7 @@ class NGramsListDAO{
     }
   }
 
-  /*def intersect(ngrams: Set[String]): Set[String] ={
-
-    BasicDAO.redisConnectionPool.withClient {
-      client => {
-       // client.sinter(ngrams.map(ngram => postingListPrefix + ngram))
-        client.sinter(serializeSetStrings(ngrams))
-          .getOrElse(Set())
-          .map(word => word.get)
-      }
-    }
-  }
-  def serializeSetStrings(set: Set[String]) : String = {
-    var resset = set.map(f =>  postingListPrefix + f)
-    resset = resset.map(f => "$" + f.length + "\r\n" + f + "\r\n")
-    var result = "*" + resset.size + "\r\n"
-    for (item <- resset) {
-      result += item
-    }
-    result
-  }*/
-
-  def erase(): Unit ={
+  def erase(): Unit = {
     BasicDAO.redisConnectionPool.withClient {
       client => {
         client.keys(ngrammListPrefix + "*")

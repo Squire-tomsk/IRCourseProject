@@ -1,5 +1,5 @@
 package structures
-import DAO.imp.postgres.PostgresDocumentDAO
+
 import DAO.imp.redis.DictionaryDAO
 import DAO.traits.DocumentDAO
 
@@ -11,19 +11,19 @@ class Dictionary {
   val dictionaryDAO: DictionaryDAO = new DictionaryDAO
 
   def add(word: String, docId: Long): Unit = {
-    dictionaryDAO.add(word,docId)
+    dictionaryDAO.add(word, docId)
   }
 
   def getIdf(word: String): Double = {
     Math.log10(
-        documentDAO.getStoredDocumentCount.toDouble / dictionaryDAO.getFreq(word))
+      documentDAO.getStoredDocumentCount.toDouble / dictionaryDAO.getFreq(word))
   }
 
   def getDocIDSet(word: String): Set[Long] = {
     dictionaryDAO.getDocIDSet(word)
   }
 
-  def erace(): Unit ={
+  def erace(): Unit = {
     dictionaryDAO.erase()
   }
 
@@ -31,7 +31,7 @@ class Dictionary {
     dictionaryDAO.addStopWord(stopWord)
   }
 
-  def getStopWords() : Set[String] = {
+  def getStopWords(): Set[String] = {
     dictionaryDAO.getStopWords()
   }
 }

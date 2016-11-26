@@ -6,18 +6,6 @@ import java.util.ArrayList
   * Created by Anastasiia on 16.11.2016.
   */
 class Combinations {
-  def factorial(number: Int) : Int = {
-    def factorialWithAccumulator(accumulator: Int, number: Int) : Int = {
-      if (number == 1 || number == 0)
-        return accumulator
-      else
-        factorialWithAccumulator(accumulator * number, number - 1)
-    }
-    factorialWithAccumulator(1, number)
-  }
-
-  def C(n: Int, k: Int): Int = factorial(n) / (factorial(k) * factorial(n - k))
-
   def combination(index: Int, k: Int, a: Array[Int]): ArrayList[Int] = {
     val res = new ArrayList[Int]
     res.add(0)
@@ -33,5 +21,17 @@ class Combinations {
     }
     res.remove(0)
     res
+  }
+
+  def C(n: Int, k: Int): Int = factorial(n) / (factorial(k) * factorial(n - k))
+
+  def factorial(number: Int): Int = {
+    def factorialWithAccumulator(accumulator: Int, number: Int): Int = {
+      if (number == 1 || number == 0)
+        return accumulator
+      else
+        factorialWithAccumulator(accumulator * number, number - 1)
+    }
+    factorialWithAccumulator(1, number)
   }
 }

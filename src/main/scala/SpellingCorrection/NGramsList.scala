@@ -12,26 +12,26 @@ class NGramsList {
     ngramsListDAO.addTerm(term)
   }
 
-  def get(ngram: String): Set[String] ={
+  def get(ngram: String): Set[String] = {
     ngramsListDAO.get(ngram)
   }
 
-  def intersect(ngram1: String, ngrams: String*): Set[String] ={
-    ngramsListDAO.intersect(ngram1, ngrams: _*)
-  }
-
-  def intersectSet (ngrams: Set[String]): Set[String] ={
-    if(ngrams.isEmpty) return Set()
+  def intersectSet(ngrams: Set[String]): Set[String] = {
+    if (ngrams.isEmpty) return Set()
     var result = intersect(ngrams.head)
     val tempngrams = ngrams.-(ngrams.head)
-    for(ngram <- tempngrams){
+    for (ngram <- tempngrams) {
       val temp = intersect(ngram)
       result = result.intersect(temp)
     }
     result
   }
 
-  def erase(): Unit ={
+  def intersect(ngram1: String, ngrams: String*): Set[String] = {
+    ngramsListDAO.intersect(ngram1, ngrams: _*)
+  }
+
+  def erase(): Unit = {
     ngramsListDAO.erase()
   }
 }

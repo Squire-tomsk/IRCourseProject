@@ -31,8 +31,8 @@ class RedisDocumentDAO extends DocumentDAO {
     BasicDAO.redisConnectionPool.withClient {
       client => {
         val document = client.get(docKeyTextPrefix + docId).getOrElse("")
-        if(document.length > 1000){
-          "<a href=\""+getUrl(docId)+"\">"+getUrl(docId)+"</a>"
+        if (document.length > 1000) {
+          "<a href=\"" + getUrl(docId) + "\">" + getUrl(docId) + "</a>"
         }
         else {
           document

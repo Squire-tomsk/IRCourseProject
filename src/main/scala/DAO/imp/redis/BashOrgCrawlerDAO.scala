@@ -34,8 +34,8 @@ class BashOrgCrawlerDAO {
           client.rpush(crawledListKey, -1)
         }
         client.lrange(crawledListKey, 0, -1).getOrElse(List())
-            .map({ number => number.getOrElse("-1") })
-            .map({ number => number.toInt })
+          .map({ number => number.getOrElse("-1") })
+          .map({ number => number.toInt })
       }
     }
   }

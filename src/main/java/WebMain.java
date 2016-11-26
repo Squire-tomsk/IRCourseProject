@@ -29,7 +29,7 @@ public class WebMain {
             }
             else {
                 List<String> result = searchEngine.getDocumentsOrLinks(query);
-                String resultString = result.stream().reduce((str1,str2) -> str1+"<br><hr><br>"+str2).toString();
+                String resultString = result.stream().reduce((str1,str2) -> str1+"<br><hr><br>"+str2).get().toString();
                 return webForm.replaceFirst("<result>",resultString);
             }
         });

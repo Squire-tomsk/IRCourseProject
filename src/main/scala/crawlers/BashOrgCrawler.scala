@@ -2,7 +2,6 @@ package crawlers
 
 import java.util.concurrent.atomic.AtomicLong
 
-import DAO.imp.postgres.PostgresDocumentDAO
 import DAO.imp.redis.BashOrgCrawlerDAO
 import DAO.traits.DocumentDAO
 import com.gaocegege.scrala.core.common.response.impl.HttpResponse
@@ -19,17 +18,16 @@ class BashOrgCrawler extends DefaultSpider {
 
   val crawlerDAO = new BashOrgCrawlerDAO
   val documentDAO = DocumentDAO.getDAO
-
-  override var workerCount: Int = 2
   val quoteNumbers = crawlerDAO.getNotCraledDocumentNumbersList
+  override var workerCount: Int = 8
   var storedDocumentCount = new AtomicLong
   storedDocumentCount.set(documentDAO.getStoredDocumentCount)
+
+  def startUrl = quoteNumbers map { number => getQuoteLink(number) }
 
   def getQuoteLink(number: Long): String = {
     "http://bash.org/?" concat number.toString
   }
-
-  def startUrl = quoteNumbers map { number => getQuoteLink(number) }
 
   override def parse(response: HttpResponse): Unit = {
     val code = response.getResponse.getStatusLine.getStatusCode

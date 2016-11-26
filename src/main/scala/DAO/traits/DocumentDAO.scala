@@ -1,13 +1,13 @@
 package DAO.traits
 
-import DAO.imp.postgres.PostgresDocumentDAO
 import DAO.imp.redis.RedisDocumentDAO
 
 /**
   * Created by abuca on 04.11.16.
   */
 object DocumentDAO {
-  def getDAO: DocumentDAO = new RedisDocumentDAO//new PostgresDocumentDAO
+  var documentDAO: DocumentDAO = new RedisDocumentDAO
+  def getDAO: DocumentDAO = documentDAO
 }
 
 trait DocumentDAO {
